@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">przelicznik</string>
+    <string-array name="currancies">
+        <item>CHF</item>
+        <item>CZK</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>PLN</item>
+        <item>USD</item>
+    </string-array>
+</resources>
