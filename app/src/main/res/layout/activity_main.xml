@@ -4,19 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/gradient_background">
+    android:background="@drawable/gradient_background"
+    tools:context=".MainActivity">
 
     <TextView
         android:id="@+id/result"
         android:layout_width="143dp"
         android:layout_height="47dp"
         android:layout_marginStart="92dp"
-        android:layout_marginBottom="318dp"
-        android:textSize="20sp"
+        android:layout_marginTop="370dp"
         android:textColor="#FFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/input"
@@ -36,8 +36,8 @@
         android:layout_height="34dp"
         android:layout_marginTop="306dp"
         android:layout_marginEnd="55dp"
-        android:visibility="visible"
         android:textColor="#FFF"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,10 +45,21 @@
         android:id="@+id/spinner2"
         android:layout_width="118dp"
         android:layout_height="34dp"
-        android:layout_marginEnd="55dp"
-        android:layout_marginBottom="318dp"
+        android:layout_marginTop="370dp"
+        android:layout_marginEnd="52dp"
         android:textColor="#FFF"
         android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/swap"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="328dp"
+        android:layout_marginBottom="360dp"
+        android:text="⇅"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

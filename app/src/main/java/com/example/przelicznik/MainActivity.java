@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,9 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue http;
     private EditText input;
     private String currency1,currency2;
-
+    public String[] signs = {"₣","Kč","€","£","Ƶ","$"};
+    public int x;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,15 +43,16 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(this,R.array.currancies, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(adapter);
+        spinner1.setSelection(4);
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 currency1 =adapterView.getItemAtPosition(i).toString();
-                if(input.getText().toString().equals("")){
-                    fetch(0);
+                if(input.getText().toString().equals("")||input.getText().toString().equals(".")){
+                    fetch(0,signs[x]);
                 }
                 else{
-                    fetch(Double.parseDouble(input.getText().toString()));
+                    fetch(Double.parseDouble(input.getText().toString()),signs[x]);
                 }
             }
 
@@ -65,12 +66,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 currency2 =adapterView.getItemAtPosition(i).toString();
-                if(input.getText().toString().equals("")){
-                    fetch(0);
+                x=i;
+                if(input.getText().toString().equals("")||input.getText().toString().equals(".")){
+                    fetch(0,signs[x]);
                 }
                 else{
-                    fetch(Double.parseDouble(input.getText().toString()));
+                    fetch(Double.parseDouble(input.getText().toString()),signs[x]);
                 }
+
             }
 
             @Override
@@ -92,24 +95,29 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(input.getText().toString().equals("")){
-                    fetch(0);
+                if(input.getText().toString().equals("")||input.getText().toString().equals(".")){
+                    fetch(0,signs[x]);
                 }
                 else{
-                    fetch(Double.parseDouble(input.getText().toString()));
+                    fetch(Double.parseDouble(input.getText().toString()),signs[x]);
                 }
 
             }
         });
+        Button swap =findViewById(R.id.swap);
+        swap.setOnClickListener(view -> {
+            int i=spinner1.getSelectedItemPosition();
+            spinner1.setSelection(spinner2.getSelectedItemPosition());
+            spinner2.setSelection(i);
+        });
     }
-
-    private void fetch(double value){
+    private void fetch(double value,String sign){
         String url="https://free.currconv.com/api/v7/convert?q="+currency1+"_"+currency2+"&compact=ultra&apiKey=a934c8614acb8f431665";
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET, url, null,
                 response -> {
                     try {
                         double rate=response.getDouble(currency1+"_"+currency2);
-                        result.setText(String.format("%.2f%n", value*rate));
+                        result.setText(String.format("%.2f "+sign+"%n", value*rate));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -119,10 +127,12 @@ public class MainActivity extends AppCompatActivity {
     }
     private final InputFilter filter = (source, start, end, dest, dstart, dend) -> {
 
-        String blockCharacterSet = ",- @#$&_()=%*':/!?+";
+        String blockCharacterSet = ",- @#$&_()=%*':/!?+£€¥¢©®™~¿[] {} <>^¡`;÷|¦¬×§¶°";
         if (source != null && blockCharacterSet.contains(("" + source))) {
             return "";
         }
         return null;
     };
 }
+//2303f2e5f5387569064d
+//a934c8614acb8f431665
