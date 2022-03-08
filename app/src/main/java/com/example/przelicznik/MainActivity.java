@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,6 +25,7 @@ import org.json.JSONException;
 public class MainActivity extends AppCompatActivity {
 
     private TextView result;
+    private TextView time;
     private RequestQueue http;
     private EditText input;
     private String currency1,currency2;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         input=findViewById(R.id.input);
         input.setFilters(new InputFilter[] { filter });
         result=findViewById(R.id.result);
+        time = findViewById(R.id.time);
+        setTime();
         Spinner spinner1 = findViewById(R.id.spinner1);
         Spinner spinner2 = findViewById(R.id.spinner2);
         ArrayAdapter<CharSequence> adapter= ArrayAdapter.createFromResource(this,R.array.currancies, android.R.layout.simple_spinner_item);
@@ -118,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         double rate=response.getDouble(currency1+"_"+currency2);
                         result.setText(String.format("%.2f "+sign+"%n", value*rate));
+                        setTime();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -125,9 +130,23 @@ public class MainActivity extends AppCompatActivity {
         http.add(request);
 
     }
+    private void setTime(){
+        String url="https://free.currconv.com/others/usage?apiKey=a934c8614acb8f431665";
+        JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET, url, null,
+                response -> {
+                    try {
+
+                        time.setText("kurs z dnia: "+response.getString("timestamp").substring(0,10));
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, Throwable::printStackTrace);
+        http.add(request);
+    }
     private final InputFilter filter = (source, start, end, dest, dstart, dend) -> {
 
-        String blockCharacterSet = ",- @#$&_()=%*':/!?+£€¥¢©®™~¿[] {} <>^¡`;÷|¦¬×§¶°";
+        String blockCharacterSet = ",- @#$&_()=%*':/!?+£€¥¢©®™~¿[]{}<>^¡`;÷|¦¬×§¶°";
         if (source != null && blockCharacterSet.contains(("" + source))) {
             return "";
         }
@@ -136,3 +155,4 @@ public class MainActivity extends AppCompatActivity {
 }
 //2303f2e5f5387569064d
 //a934c8614acb8f431665
+//https://free.currconv.com/others/usage?apiKey=a934c8614acb8f431665
